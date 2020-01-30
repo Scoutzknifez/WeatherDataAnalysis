@@ -47,8 +47,11 @@ public class TimeAtMoment {
         }
     }
 
-    @Override
-    public String toString() {
+    public String dateString() {
+        return getMonth() + "/" + getDay() + "/" + getYear();
+    }
+
+    public String timeString() {
         StringBuilder sb = new StringBuilder();
         String section;
 
@@ -80,5 +83,10 @@ public class TimeAtMoment {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return dateString() + " " + timeString();
     }
 }

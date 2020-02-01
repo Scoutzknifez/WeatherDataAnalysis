@@ -15,11 +15,12 @@ import java.util.List;
 
 public class Main {
     public static OverallView overallView;
+    public static List<WeatherForTime> weathers;
+    public static TimeAtMoment startTime;
 
     public static void main(String[] args) {
-        List<WeatherForTime> weathers = (List<WeatherForTime>) SQLHelper.getFromTable(Table.WEATHER_FOR_TIME);
-        List<TimeAtMoment> times = new ArrayList<>();
-        weathers.forEach(weatherForTime -> times.add(new TimeAtMoment(weatherForTime.getTime() * 1000)));
+        weathers = (List<WeatherForTime>) SQLHelper.getFromTable(Table.WEATHER_FOR_TIME);
+        startTime = new TimeAtMoment(weathers.get(0).getTime() * 1000);
 
         int i = 0;
         for(WeatherForTime wft : weathers) {
@@ -27,11 +28,14 @@ public class Main {
             Utils.log("%s: %s", i, wft);
         }
 
+        /*List<TimeAtMoment> times = new ArrayList<>();
+        weathers.forEach(weatherForTime -> times.add(new TimeAtMoment(weatherForTime.getTime() * 1000)));
+
         i = 0;
         for(TimeAtMoment tam : times) {
             i++;
             Utils.log("%s: %s", i , tam);
-        }
+        }*/
 
         makeFrame();
     }

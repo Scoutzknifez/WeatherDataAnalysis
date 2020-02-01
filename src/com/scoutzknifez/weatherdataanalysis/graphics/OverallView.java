@@ -7,16 +7,10 @@ import javax.swing.*;
 @Getter
 public class OverallView {
     private JPanel parentContainer;
+    private JLabel frameLabel;
+    private JPanel paintPanel;
 
-    public OverallView() {
-
-    }
-
-    private void $$$setupUI$$$() {
-        setUpCanvas();
-    }
-
-    private void setUpCanvas() {
-
+    private void createUIComponents() {
+        paintPanel = new CustomPanel();
     }
 }

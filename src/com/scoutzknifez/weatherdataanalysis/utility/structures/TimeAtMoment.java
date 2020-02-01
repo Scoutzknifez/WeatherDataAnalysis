@@ -1,5 +1,6 @@
 package com.scoutzknifez.weatherdataanalysis.utility.structures;
 
+import com.scoutzknifez.weatherdataanalysis.utility.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,14 @@ public class TimeAtMoment {
     public void addTime(long time) {
         setMillis(getMillis() + time);
         refreshTime();
+    }
+
+    public int hoursBetween(TimeAtMoment time) {
+        return (int) (Math.abs(getMillis() - time.getMillis()) / Constants.MILLIS_IN_HOUR);
+    }
+
+    public int minutesBetween(TimeAtMoment time) {
+        return (int) (Math.abs(getMillis() - time.getMillis())/ Constants.MILLIS_IN_MINUTE);
     }
 
     public void refreshTime() {

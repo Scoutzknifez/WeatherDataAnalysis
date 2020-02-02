@@ -66,6 +66,8 @@ public class TimeAtMoment {
 
         if(getHour() > 12) {
             section = (getHour() - 12) + ":";
+        } else if (getHour() == 0) {
+            section = "12:";
         } else {
             section = (getHour()) + ":";
         }

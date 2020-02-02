@@ -22,11 +22,11 @@ public class Main {
         weathers = (List<WeatherForTime>) SQLHelper.getFromTable(Table.WEATHER_FOR_TIME);
         startTime = new TimeAtMoment(weathers.get(0).getTime() * 1000);
 
-        int i = 0;
+        /*int i = 0;
         for(WeatherForTime wft : weathers) {
             i++;
             Utils.log("%s: %s", i, wft);
-        }
+        }*/
 
         /*List<TimeAtMoment> times = new ArrayList<>();
         weathers.forEach(weatherForTime -> times.add(new TimeAtMoment(weatherForTime.getTime() * 1000)));

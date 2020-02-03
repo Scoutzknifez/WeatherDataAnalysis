@@ -3,39 +3,34 @@ package com.scoutzknifez.weatherdataanalysis.graphics;
 import com.scoutzknifez.weatherdataanalysis.Main;
 import com.scoutzknifez.weatherdataanalysis.structures.dtos.WeatherForTime;
 import com.scoutzknifez.weatherdataanalysis.utility.structures.TimeAtMoment;
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.*;
 import java.util.List;
 import java.util.function.Supplier;
 
 @Setter
+@Getter
 public class CustomPanel extends JPanel {
+    private OverallView viewHolder;
+
     private Map<Point, WeatherForTime> pointWeatherMap = new LinkedHashMap<>();
-    private double minutePixelIncrementor = .4;
+    private double minutePixelIncrementer = .4;
     private WeatherForTime closestWeatherToMouse = null;
 
-    Supplier<Integer> getLeftGuidelineStart = () -> {
-        return 25;
-    };
-    Supplier<Integer> getBottomGuidelineHeight = () -> {
-        return (int) getSize().getHeight() - 40;
-    };
-    Supplier<Integer> getTemperatureIncrements = () -> {
-        return getBottomGuidelineHeight.get() / 125;
-    };
-    Supplier<Integer> getHourIncrements = () -> {
-        return Math.min(40, (int) (getSize().getWidth() - getLeftGuidelineStart.get()) / 24) ;
-    };
-    Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementor;
+    Supplier<Integer> getLeftGuidelineStart = () -> 25;
+    Supplier<Integer> getBottomGuidelineHeight = () -> (int) getSize().getHeight() - 40;
+    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / 125;
+    Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementer;
 
-    public CustomPanel() {
+    public CustomPanel(OverallView viewHolder) {
+        setViewHolder(viewHolder);
+
         // Listener for mouse motion inside drawing panel
         addMouseMotionListener(new MouseMotionListener() {
             // Used for scrolling across data horizontally
@@ -54,6 +49,9 @@ public class CustomPanel extends JPanel {
                     return;
                 }
 
+                if (xCord < getLeftGuidelineStart.get())
+                    return;
+
                 List<Point> points = new ArrayList<>(pointWeatherMap.keySet());
                 double closestDistance = e.getPoint().distance(points.get(0));
                 Point closestPoint = points.get(0);
@@ -65,35 +63,31 @@ public class CustomPanel extends JPanel {
                     }
                 }
 
-                if (closestDistance < 25) {
+                if (closestDistance < 25)
                     setClosestWeather(pointWeatherMap.get(closestPoint));
-                } else {
+                else
                     setClosestWeather(null);
-                }
             }
+        });
+
+        addMouseWheelListener(e -> {
+            try {
+                getViewHolder().getPpmSpinner().setValue(e.getWheelRotation() > 0 ?
+                        getViewHolder().getPpmSpinner().getPreviousValue() :
+                        getViewHolder().getPpmSpinner().getNextValue());
+                setClosestWeather(null);
+            } catch (IllegalArgumentException ignored) {}
         });
 
         addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
+            public void mouseClicked(MouseEvent e) {}
             @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
+            public void mousePressed(MouseEvent e) {}
             @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
+            public void mouseReleased(MouseEvent e) {}
             @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
+            public void mouseEntered(MouseEvent e) {}
             @Override
             public void mouseExited(MouseEvent e) {
                 setClosestWeather(null);
@@ -121,9 +115,8 @@ public class CustomPanel extends JPanel {
         drawGuidelines(g2);
         graphTemperatures(g2);
 
-        if (closestWeatherToMouse != null) {
+        if (closestWeatherToMouse != null)
             drawClosestWeather(g2, closestWeatherToMouse);
-        }
     }
 
     private void drawLabels(Graphics2D g2) {

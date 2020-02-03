@@ -11,21 +11,19 @@ public class OverallView {
     private JSpinner ppmSpinner;
 
     private void createUIComponents() {
-        // Drawing panel
-        paintPanel = new CustomPanel();
-
         // Spinner Model
-        double startVal = .4;
-        double min = .05;
-        double max = 1;
-        double stepSize = .05;
-        SpinnerNumberModel model = new SpinnerNumberModel(startVal, min, max, stepSize);
+        SpinnerNumberModel model = new SpinnerNumberModel(
+                ViewModelConstants.startVal, ViewModelConstants.min, ViewModelConstants.max, ViewModelConstants.stepSize
+        );
         ppmSpinner = new JSpinner(model);
 
         // Spinner increment/decrement listener
         ppmSpinner.addChangeListener(changeEvent -> {
-            ((CustomPanel) paintPanel).setMinutePixelIncrementor((Double) ppmSpinner.getValue());
+            ((CustomPanel) paintPanel).setMinutePixelIncrementer((Double) ppmSpinner.getValue());
             paintPanel.repaint();
         });
+
+        // Drawing panel
+        paintPanel = new CustomPanel(this);
     }
 }

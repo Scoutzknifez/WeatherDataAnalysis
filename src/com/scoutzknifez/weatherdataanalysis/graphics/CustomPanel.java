@@ -12,6 +12,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.util.*;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Setter
@@ -21,12 +22,17 @@ public class CustomPanel extends JPanel {
 
     private Map<Point, WeatherForTime> pointWeatherMap = new LinkedHashMap<>();
     private double minutePixelIncrementer = .4;
+    private int highestTemp = 125;
+    private int lowestTemp = 0;
+
     private WeatherForTime closestWeatherToMouse = null;
 
     Supplier<Integer> getLeftGuidelineStart = () -> 25;
     Supplier<Integer> getBottomGuidelineHeight = () -> (int) getSize().getHeight() - 40;
-    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / 125;
+    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / highestTemp;
     Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementer;
+
+    Function<WeatherForTime, Double> getTemperatureY = weatherForTime -> (weatherForTime.getTemperature() - getLowestTemp()) * getTemperatureIncrements.get();
 
     public CustomPanel(OverallView viewHolder) {
         setViewHolder(viewHolder);
@@ -160,7 +166,7 @@ public class CustomPanel extends JPanel {
 
         TimeAtMoment time = new TimeAtMoment(weather.getTime() * 1000);
 
-        Point point = new Point((int) (x0 + (Main.startTime.minutesBetween(time) * getMinuteIncrements.get())), (int) (y0 - (weather.getTemperature() * getTemperatureIncrements.get())));
+        Point point = new Point((int) (x0 + (Main.startTime.minutesBetween(time) * getMinuteIncrements.get())), (int) (y0 - getTemperatureY.apply(weather)));
         pointWeatherMap.put(point, weather);
 
         return point;

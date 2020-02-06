@@ -78,9 +78,9 @@ public class CustomPanel extends JPanel {
 
         addMouseWheelListener(e -> {
             try {
-                getViewHolder().getPpmSpinner().setValue(e.getWheelRotation() > 0 ?
-                        getViewHolder().getPpmSpinner().getPreviousValue() :
-                        getViewHolder().getPpmSpinner().getNextValue());
+                getViewHolder().getPixelPerMinuteSpinner().setValue(e.getWheelRotation() > 0 ?
+                        getViewHolder().getPixelPerMinuteSpinner().getPreviousValue() :
+                        getViewHolder().getPixelPerMinuteSpinner().getNextValue());
                 setClosestWeather(null);
             } catch (IllegalArgumentException ignored) {}
         });

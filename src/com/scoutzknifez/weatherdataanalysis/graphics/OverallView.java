@@ -8,18 +8,41 @@ import javax.swing.*;
 public class OverallView {
     private JPanel parentContainer;
     private JPanel paintPanel;
-    private JSpinner ppmSpinner;
+    private JSpinner pixelPerMinuteSpinner;
+    private JSpinner lowTemperatureDisplayedSpinner;
+    private JSpinner highTemperatureDisplayedSpinner;
 
     private void createUIComponents() {
-        // Spinner Model
+        // pixels per minute spinner model
         SpinnerNumberModel model = new SpinnerNumberModel(
-                ViewModelConstants.startVal, ViewModelConstants.min, ViewModelConstants.max, ViewModelConstants.stepSize
+                ViewModelConstants.startVal,
+                ViewModelConstants.min,
+                ViewModelConstants.max,
+                ViewModelConstants.stepSize
         );
-        ppmSpinner = new JSpinner(model);
+        pixelPerMinuteSpinner = new JSpinner(model);
+
+        // low temperature displayed spinner model
+        model = new SpinnerNumberModel(
+                ViewModelConstants.startLow,
+                ViewModelConstants.lowMin,
+                ViewModelConstants.lowMax,
+                ViewModelConstants.temperatureStepSize
+        );
+        lowTemperatureDisplayedSpinner = new JSpinner(model);
+
+        // high temperature displayed spinner model
+        model = new SpinnerNumberModel(
+                ViewModelConstants.startHigh,
+                ViewModelConstants.highMin,
+                ViewModelConstants.highMax,
+                ViewModelConstants.temperatureStepSize
+        );
+        highTemperatureDisplayedSpinner = new JSpinner(model);
 
         // Spinner increment/decrement listener
-        ppmSpinner.addChangeListener(changeEvent -> {
-            ((CustomPanel) paintPanel).setMinutePixelIncrementer((Double) ppmSpinner.getValue());
+        pixelPerMinuteSpinner.addChangeListener(changeEvent -> {
+            ((CustomPanel) paintPanel).setMinutePixelIncrementer((double) pixelPerMinuteSpinner.getValue());
             paintPanel.repaint();
         });
 

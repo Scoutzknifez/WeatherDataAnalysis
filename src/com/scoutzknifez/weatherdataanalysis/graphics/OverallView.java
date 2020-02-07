@@ -13,40 +13,63 @@ public class OverallView {
     private JSpinner highTemperatureDisplayedSpinner;
 
     private void createUIComponents() {
+        setPixelPerMinuteSpinner();
+        setLowTemperatureDisplayedSpinner();
+        setHighTemperatureDisplayedSpinner();
+
+        // Drawing panel
+        paintPanel = new CustomPanel(this);
+    }
+
+    private void setPixelPerMinuteSpinner() {
         // pixels per minute spinner model
-        SpinnerNumberModel model = new SpinnerNumberModel(
+        pixelPerMinuteSpinner = new JSpinner(
+            new SpinnerNumberModel(
                 ViewModelConstants.startVal,
                 ViewModelConstants.min,
                 ViewModelConstants.max,
                 ViewModelConstants.stepSize
+            )
         );
-        pixelPerMinuteSpinner = new JSpinner(model);
 
-        // low temperature displayed spinner model
-        model = new SpinnerNumberModel(
-                ViewModelConstants.startLow,
-                ViewModelConstants.lowMin,
-                ViewModelConstants.lowMax,
-                ViewModelConstants.temperatureStepSize
-        );
-        lowTemperatureDisplayedSpinner = new JSpinner(model);
-
-        // high temperature displayed spinner model
-        model = new SpinnerNumberModel(
-                ViewModelConstants.startHigh,
-                ViewModelConstants.highMin,
-                ViewModelConstants.highMax,
-                ViewModelConstants.temperatureStepSize
-        );
-        highTemperatureDisplayedSpinner = new JSpinner(model);
-
-        // Spinner increment/decrement listener
+        // pixels per minute Spinner increment/decrement listener
         pixelPerMinuteSpinner.addChangeListener(changeEvent -> {
             ((CustomPanel) paintPanel).setMinutePixelIncrementer((double) pixelPerMinuteSpinner.getValue());
             paintPanel.repaint();
         });
+    }
 
-        // Drawing panel
-        paintPanel = new CustomPanel(this);
+    private void setLowTemperatureDisplayedSpinner() {
+        // low temperature displayed spinner model
+        lowTemperatureDisplayedSpinner = new JSpinner(
+            new SpinnerNumberModel(
+                ViewModelConstants.startLow,
+                ViewModelConstants.lowMin,
+                ViewModelConstants.lowMax,
+                ViewModelConstants.temperatureStepSize
+            )
+        );
+
+        lowTemperatureDisplayedSpinner.addChangeListener(changeEvent -> {
+            ((CustomPanel) paintPanel).setLowestTempDisplayed((int) lowTemperatureDisplayedSpinner.getValue());
+            paintPanel.repaint();
+        });
+    }
+
+    private void setHighTemperatureDisplayedSpinner() {
+        // high temperature displayed spinner model
+        highTemperatureDisplayedSpinner = new JSpinner(
+            new SpinnerNumberModel(
+                ViewModelConstants.startHigh,
+                ViewModelConstants.highMin,
+                ViewModelConstants.highMax,
+                ViewModelConstants.temperatureStepSize
+            )
+        );
+
+        highTemperatureDisplayedSpinner.addChangeListener(changeEvent -> {
+            ((CustomPanel) paintPanel).setHighestTempDisplayed((int) highTemperatureDisplayedSpinner.getValue());
+            paintPanel.repaint();
+        });
     }
 }

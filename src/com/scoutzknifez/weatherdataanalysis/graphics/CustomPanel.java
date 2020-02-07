@@ -22,17 +22,17 @@ public class CustomPanel extends JPanel {
 
     private Map<Point, WeatherForTime> pointWeatherMap = new LinkedHashMap<>();
     private double minutePixelIncrementer = .4;
-    private int highestTemp = 125;
-    private int lowestTemp = 0;
+    private int highestTempDisplayed = 125;
+    private int lowestTempDisplayed = 0;
 
     private WeatherForTime closestWeatherToMouse = null;
 
     Supplier<Integer> getLeftGuidelineStart = () -> 25;
     Supplier<Integer> getBottomGuidelineHeight = () -> (int) getSize().getHeight() - 40;
-    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / highestTemp;
+    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / highestTempDisplayed;
     Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementer;
 
-    Function<WeatherForTime, Double> getTemperatureY = weatherForTime -> (weatherForTime.getTemperature() - getLowestTemp()) * getTemperatureIncrements.get();
+    Function<WeatherForTime, Double> getTemperatureY = weatherForTime -> (weatherForTime.getTemperature() - getLowestTempDisplayed()) * getTemperatureIncrements.get();
 
     public CustomPanel(OverallView viewHolder) {
         setViewHolder(viewHolder);

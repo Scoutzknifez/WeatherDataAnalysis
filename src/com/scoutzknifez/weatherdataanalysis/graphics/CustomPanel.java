@@ -2,7 +2,6 @@ package com.scoutzknifez.weatherdataanalysis.graphics;
 
 import com.scoutzknifez.weatherdataanalysis.Main;
 import com.scoutzknifez.weatherdataanalysis.structures.dtos.WeatherForTime;
-import com.scoutzknifez.weatherdataanalysis.utility.Utils;
 import com.scoutzknifez.weatherdataanalysis.utility.structures.TimeAtMoment;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +21,10 @@ public class CustomPanel extends JPanel {
     private OverallView viewHolder;
 
     private Map<Point, WeatherForTime> pointWeatherMap = new LinkedHashMap<>();
+    // X Limiters
     private double minutePixelIncrementer = .4;
+    private TimeAtMoment startTime;
+    // Y Limiters
     private int highestTempDisplayed = 125;
     private int lowestTempDisplayed = 0;
 
@@ -33,10 +35,12 @@ public class CustomPanel extends JPanel {
     Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / (highestTempDisplayed - getLowestTempDisplayed());
     Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementer;
 
+    //Function<WeatherForTime, Double> getTemperatureX = weatherForTime ->
     Function<WeatherForTime, Double> getTemperatureY = weatherForTime -> (weatherForTime.getTemperature() - getLowestTempDisplayed()) * getTemperatureIncrements.get();
 
     public CustomPanel(OverallView viewHolder) {
         setViewHolder(viewHolder);
+        startTime = new TimeAtMoment(Main.weathers.get(0).getTime() * 1000);
 
         // Listener for mouse motion inside drawing panel
         addMouseMotionListener(new MouseMotionListener() {
@@ -89,8 +93,15 @@ public class CustomPanel extends JPanel {
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (getClosestWeatherToMouse() != null)
-                    Utils.log(getClosestWeatherToMouse());
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (getClosestWeatherToMouse() != null) {
+                        startTime = new TimeAtMoment(getClosestWeatherToMouse().getTime() * 1000);
+                        repaint();
+                    }
+                } else {
+                    startTime = new TimeAtMoment(Main.weathers.get(0).getTime() * 1000);
+                    repaint();
+                }
             }
             @Override
             public void mousePressed(MouseEvent e) {}
@@ -151,8 +162,16 @@ public class CustomPanel extends JPanel {
     }
 
     private void graphTemperatures(Graphics2D g2) {
-        Point start = getLocationOfTemperature(Main.weathers.get(0));
-        for (int i = 1; i < Main.weathers.size(); i++) {
+        int startIndex = 0;
+        for (int i = startIndex; i < Main.weathers.size(); i++) {
+            if (getStartTime().getMillis() <= (Main.weathers.get(i).getTime() * 1000)) {
+                startIndex = i;
+                break;
+            }
+        }
+
+        Point start = getLocationOfTemperature(Main.weathers.get(startIndex));
+        for (int i = startIndex + 1; i < Main.weathers.size(); i++) {
             Point end = getLocationOfTemperature(Main.weathers.get(i));
             g2.drawLine(start.x, start.y, end.x, end.y);
             start = end;
@@ -170,7 +189,7 @@ public class CustomPanel extends JPanel {
 
         TimeAtMoment time = new TimeAtMoment(weather.getTime() * 1000);
 
-        Point point = new Point((int) (x0 + (Main.startTime.minutesBetween(time) * getMinuteIncrements.get())), (int) (y0 - getTemperatureY.apply(weather)));
+        Point point = new Point((int) (x0 + (startTime.minutesBetween(time) * getMinuteIncrements.get())), (int) (y0 - getTemperatureY.apply(weather)));
         pointWeatherMap.put(point, weather);
 
         return point;

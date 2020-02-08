@@ -5,23 +5,17 @@ import com.scoutzknifez.weatherdataanalysis.graphics.ViewModelConstants;
 import com.scoutzknifez.weatherdataanalysis.sql.SQLHelper;
 import com.scoutzknifez.weatherdataanalysis.sql.Table;
 import com.scoutzknifez.weatherdataanalysis.structures.dtos.WeatherForTime;
-import com.scoutzknifez.weatherdataanalysis.utility.Constants;
-import com.scoutzknifez.weatherdataanalysis.utility.Utils;
-import com.scoutzknifez.weatherdataanalysis.utility.structures.TimeAtMoment;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static OverallView overallView;
     public static List<WeatherForTime> weathers;
-    public static TimeAtMoment startTime;
 
     public static void main(String[] args) {
         weathers = (List<WeatherForTime>) SQLHelper.getFromTable(Table.WEATHER_FOR_TIME);
-        startTime = new TimeAtMoment(weathers.get(0).getTime() * 1000);
 
         makeFrame();
     }

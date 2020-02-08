@@ -2,6 +2,7 @@ package com.scoutzknifez.weatherdataanalysis.graphics;
 
 import com.scoutzknifez.weatherdataanalysis.Main;
 import com.scoutzknifez.weatherdataanalysis.structures.dtos.WeatherForTime;
+import com.scoutzknifez.weatherdataanalysis.utility.Utils;
 import com.scoutzknifez.weatherdataanalysis.utility.structures.TimeAtMoment;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,7 @@ public class CustomPanel extends JPanel {
 
     Supplier<Integer> getLeftGuidelineStart = () -> 25;
     Supplier<Integer> getBottomGuidelineHeight = () -> (int) getSize().getHeight() - 40;
-    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / highestTempDisplayed;
+    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / (highestTempDisplayed - getLowestTempDisplayed());
     Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementer;
 
     Function<WeatherForTime, Double> getTemperatureY = weatherForTime -> (weatherForTime.getTemperature() - getLowestTempDisplayed()) * getTemperatureIncrements.get();
@@ -87,7 +88,10 @@ public class CustomPanel extends JPanel {
 
         addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {}
+            public void mouseClicked(MouseEvent e) {
+                if (getClosestWeatherToMouse() != null)
+                    Utils.log(getClosestWeatherToMouse());
+            }
             @Override
             public void mousePressed(MouseEvent e) {}
             @Override

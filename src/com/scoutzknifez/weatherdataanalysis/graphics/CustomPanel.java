@@ -2,6 +2,7 @@ package com.scoutzknifez.weatherdataanalysis.graphics;
 
 import com.scoutzknifez.weatherdataanalysis.Main;
 import com.scoutzknifez.weatherdataanalysis.structures.dtos.WeatherForTime;
+import com.scoutzknifez.weatherdataanalysis.utility.Utils;
 import com.scoutzknifez.weatherdataanalysis.utility.structures.TimeAtMoment;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +26,8 @@ public class CustomPanel extends JPanel {
     private double minutePixelIncrementer = .4;
     private TimeAtMoment startTime;
     // Y Limiters
-    private int highestTempDisplayed = 125;
-    private int lowestTempDisplayed = 0;
+    private int highestTempDisplayed = ViewModelConstants.startHigh;
+    private int lowestTempDisplayed = ViewModelConstants.startLow;
 
     private WeatherForTime closestWeatherToMouse = null;
 
@@ -47,7 +48,7 @@ public class CustomPanel extends JPanel {
             // Used for scrolling across data horizontally
             @Override
             public void mouseDragged(MouseEvent e) {
-                //Utils.log(e.getX());
+                Utils.log(e.getX());
             }
 
             // Used for focusing on a point of data, much like desmos graphing system.

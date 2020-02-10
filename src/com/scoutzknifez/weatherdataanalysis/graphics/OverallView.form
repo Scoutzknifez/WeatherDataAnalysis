@@ -40,7 +40,7 @@
                 <properties>
                   <horizontalAlignment value="0"/>
                   <horizontalTextPosition value="0"/>
-                  <text value="Pixel Per Minute (0.05 - 1)"/>
+                  <text value="Pixel Per Minute (0.025 - 2)"/>
                 </properties>
               </component>
               <component id="db4d2" class="javax.swing.JSpinner" binding="pixelPerMinuteSpinner" custom-create="true">
@@ -99,7 +99,7 @@
                     <properties>
                       <horizontalAlignment value="0"/>
                       <horizontalTextPosition value="0"/>
-                      <text value="High"/>
+                      <text value="High (50 - 125)"/>
                     </properties>
                   </component>
                   <component id="2080b" class="javax.swing.JSpinner" binding="highTemperatureDisplayedSpinner" custom-create="true">
@@ -125,7 +125,7 @@
                     <properties>
                       <horizontalAlignment value="0"/>
                       <horizontalTextPosition value="0"/>
-                      <text value="Low"/>
+                      <text value="Low (-25 - 40)"/>
                     </properties>
                   </component>
                   <component id="77c2d" class="javax.swing.JSpinner" binding="lowTemperatureDisplayedSpinner" custom-create="true">

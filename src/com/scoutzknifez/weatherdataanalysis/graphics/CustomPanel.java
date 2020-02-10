@@ -26,14 +26,14 @@ public class CustomPanel extends JPanel {
     private double minutePixelIncrementer = .4;
     private TimeAtMoment startTime;
     // Y Limiters
-    private int highestTempDisplayed = ViewModelConstants.startHigh;
-    private int lowestTempDisplayed = ViewModelConstants.startLow;
+    private double highestTempDisplayed = ViewModelConstants.startHigh;
+    private double lowestTempDisplayed = ViewModelConstants.startLow;
 
     private WeatherForTime closestWeatherToMouse = null;
 
     Supplier<Integer> getLeftGuidelineStart = () -> 25;
     Supplier<Integer> getBottomGuidelineHeight = () -> (int) getSize().getHeight() - 40;
-    Supplier<Integer> getTemperatureIncrements = () -> getBottomGuidelineHeight.get() / (highestTempDisplayed - getLowestTempDisplayed());
+    Supplier<Double> getTemperatureIncrements = () -> (double) getBottomGuidelineHeight.get() / (getHighestTempDisplayed() - getLowestTempDisplayed());
     Supplier<Double> getMinuteIncrements = () -> minutePixelIncrementer;
 
     //Function<WeatherForTime, Double> getTemperatureX = weatherForTime ->
@@ -95,9 +95,13 @@ public class CustomPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    if (getClosestWeatherToMouse() != null) {
-                        startTime = new TimeAtMoment(getClosestWeatherToMouse().getTime() * 1000);
-                        repaint();
+                    if (e.isControlDown()) {
+                        Utils.log(getClosestWeatherToMouse());
+                    } else {
+                        if (getClosestWeatherToMouse() != null) {
+                            startTime = new TimeAtMoment(getClosestWeatherToMouse().getTime() * 1000);
+                            repaint();
+                        }
                     }
                 } else {
                     startTime = new TimeAtMoment(Main.weathers.get(0).getTime() * 1000);
@@ -171,16 +175,33 @@ public class CustomPanel extends JPanel {
             }
         }
 
-        Point start = getLocationOfTemperature(Main.weathers.get(startIndex));
+        Stroke og = g2.getStroke();
+
+        WeatherForTime weatherStart = Main.weathers.get(startIndex);
+        Point start = getLocationOfTemperature(weatherStart);
         for (int i = startIndex + 1; i < Main.weathers.size(); i++) {
-            Point end = getLocationOfTemperature(Main.weathers.get(i));
+            WeatherForTime weatherEnd = Main.weathers.get(i);
+            Point end = getLocationOfTemperature(weatherEnd);
+
+            g2.setColor(
+                    Utils.getGradientBetween(
+                            Utils.getColorFromWeather(weatherStart),
+                            Utils.getColorFromWeather(weatherEnd),
+                            .5f
+                    )
+            );
+            g2.setStroke(new BasicStroke(3));
             g2.drawLine(start.x, start.y, end.x, end.y);
+
+            weatherStart = weatherEnd;
             start = end;
         }
+        g2.setStroke(og);
     }
 
     private void drawClosestWeather(Graphics2D g2, WeatherForTime weather) {
         Point point = getLocationOfTemperature(weather);
+        g2.setColor(Color.WHITE);
         g2.drawOval((int) point.getX() - 5, (int) point.getY() - 5, 10, 10);
     }
 

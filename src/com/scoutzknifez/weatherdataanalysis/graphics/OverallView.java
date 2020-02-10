@@ -51,7 +51,7 @@ public class OverallView {
         );
 
         lowTemperatureDisplayedSpinner.addChangeListener(changeEvent -> {
-            ((CustomPanel) paintPanel).setLowestTempDisplayed((int) lowTemperatureDisplayedSpinner.getValue());
+            ((CustomPanel) paintPanel).setLowestTempDisplayed((double) lowTemperatureDisplayedSpinner.getValue());
             paintPanel.repaint();
         });
     }
@@ -68,7 +68,7 @@ public class OverallView {
         );
 
         highTemperatureDisplayedSpinner.addChangeListener(changeEvent -> {
-            ((CustomPanel) paintPanel).setHighestTempDisplayed((int) highTemperatureDisplayedSpinner.getValue());
+            ((CustomPanel) paintPanel).setHighestTempDisplayed((double) highTemperatureDisplayedSpinner.getValue());
             paintPanel.repaint();
         });
     }

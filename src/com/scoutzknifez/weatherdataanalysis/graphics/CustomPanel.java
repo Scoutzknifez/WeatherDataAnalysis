@@ -176,6 +176,7 @@ public class CustomPanel extends JPanel {
         }
 
         Stroke og = g2.getStroke();
+        g2.setStroke(new BasicStroke(3));
 
         WeatherForTime weatherStart = Main.weathers.get(startIndex);
         Point start = getLocationOfTemperature(weatherStart);
@@ -190,7 +191,6 @@ public class CustomPanel extends JPanel {
                             .5f
                     )
             );
-            g2.setStroke(new BasicStroke(3));
             g2.drawLine(start.x, start.y, end.x, end.y);
 
             weatherStart = weatherEnd;
